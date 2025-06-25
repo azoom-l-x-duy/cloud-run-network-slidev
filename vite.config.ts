@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/how-cloudrun-request-work/' : '/',
+  base: process.env.NODE_ENV === 'production' ? '/cloud-run-network-slidev/' : '/',
   build: {
-    outDir: 'docs', // Change from 'dist' to 'build'
+    outDir: 'docs',
     assetsDir: 'assets',
     emptyOutDir: true,
   },

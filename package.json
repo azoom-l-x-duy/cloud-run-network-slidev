@@ -1,10 +1,11 @@
 {
   "name": "how-cloudrun-request-work",
+  "version": "0.0.1",
   "type": "module",
   "private": true,
   "scripts": {
     "build": "slidev build",
-    "build:docs": "slidev build --out docs",
+    "build:docs": "slidev build --base /cloud-run-network-slidev/ --out docs",
     "dev": "slidev --open",
     "export": "slidev export"
   },
