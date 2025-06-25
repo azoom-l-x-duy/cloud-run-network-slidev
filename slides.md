@@ -1,6 +1,7 @@
 ---
 theme: default
-background: https://source.unsplash.com/1920x1080/?cloud,technology
+background: '#87CEFA55' # Light blue background
+# background: https://source.unsplash.com/1920x1080/?cloud,technology
 class: text-center
 highlighter: shiki
 lineNumbers: false
@@ -21,6 +22,10 @@ A comprehensive guide to understanding request flow through Google Cloud Platfor
   <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
     Let's explore the journey of a request <carbon:arrow-right class="inline"/>
   </span>
+</div>
+
+<div class="absolute bottom-4 right-4 text-sm text-gray-500">
+  az-lxduy 06/2025
 </div>
 
 ---
@@ -45,7 +50,7 @@ Understanding the complete request flow through GCP components:
 <v-click>
 
 ```mermaid
-graph TB
+graph LR
     A[User Browser] --> B[Load Balancer]
     B --> C[Cloud Armor]
     C --> D[Cloud Run]
@@ -196,6 +201,19 @@ layout: default
 
 <div>
 
+<v-click>
+
+```mermaid
+graph LR
+    A[Load Balancer] --> B{Ingress Check}
+    B -->|Allowed| C[Cloud Run Instance]
+    B -->|Blocked| D[403 Forbidden]
+    C --> E[Container Startup]
+    E --> F[App Processing]
+```
+
+</v-click>
+
 ```yaml
 # Cloud Run Service Configuration
 service:
@@ -215,19 +233,6 @@ service:
         timeoutSeconds: 300
 ```
 
-<v-click>
-
-```mermaid
-graph LR
-    A[Load Balancer] --> B{Ingress Check}
-    B -->|Allowed| C[Cloud Run Instance]
-    B -->|Blocked| D[403 Forbidden]
-    C --> E[Container Startup]
-    E --> F[App Processing]
-```
-
-</v-click>
-
 </div>
 
 </div>
@@ -240,6 +245,8 @@ layout: default
 
 Your application handles the request within the Cloud Run container:
 
+<div class="grid grid-cols-2 gap-8">
+<div>
 <v-clicks>
 
 - 🐳 **Container startup** - If no warm instances available
@@ -249,8 +256,9 @@ Your application handles the request within the Cloud Run container:
 - 📝 **Response generation** - Prepare data for client
 
 </v-clicks>
+</div>
 
-<div class="mt-4">
+<div>
 
 ```javascript
 // Example Express.js app in Cloud Run
@@ -275,6 +283,7 @@ app.listen(port, () => {
 });
 ```
 
+</div>
 </div>
 
 ---
@@ -313,21 +322,6 @@ When your container needs to make external requests:
 
 <div>
 
-```yaml
-# VPC Connector Configuration
-apiVersion: serving.knative.dev/v1
-kind: Service
-metadata:
-  annotations:
-    run.googleapis.com/vpc-access-connector: projects/PROJECT/locations/REGION/connectors/CONNECTOR
-    run.googleapis.com/vpc-access-egress: private-ranges-only
-spec:
-  template:
-    metadata:
-      annotations:
-        run.googleapis.com/vpc-access-connector: CONNECTOR
-```
-
 <v-click>
 
 ```mermaid
@@ -342,6 +336,21 @@ graph TB
 ```
 
 </v-click>
+
+```yaml
+# VPC Connector Configuration
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+    run.googleapis.com/vpc-access-connector: projects/PROJECT/locations/REGION/connectors/CONNECTOR
+    run.googleapis.com/vpc-access-egress: private-ranges-only
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/vpc-access-connector: CONNECTOR
+```
 
 </div>
 
@@ -365,7 +374,37 @@ The response travels back through the same path:
 
 </v-clicks>
 
-<div class="mt-6">
+<!-- <div>
+
+```mermaid
+sequenceDiagram
+    participant U as User Browser
+    participant L as Load Balancer  
+    participant A as Cloud Armor
+    participant R as Cloud Run
+    participant C as Container App
+    participant E as External API
+    
+    U->>L: HTTPS Request
+    L->>A: Security Check
+    A->>R: Route Request
+    R->>C: Process Request
+    C->>E: External Call
+    E->>C: External Response
+    C->>R: App Response
+    R->>L: Forward Response
+    L->>U: HTTPS Response
+```
+
+</div> -->
+
+---
+layout: default
+---
+
+# Step 6: Response Flow
+
+<div>
 
 ```mermaid
 sequenceDiagram
@@ -499,34 +538,55 @@ layout: default
 ---
 
 # Best Practices
+<div class="grid grid-cols-2 gap-8">
 
-<v-clicks>
+<div>
 
 ## 🏗️ Architecture
+<v-clicks>
+
 - Use VPC connectors for private resources
 - Implement proper health checks
 - Configure appropriate concurrency limits
 - Set up monitoring and alerting
 
+</v-clicks>
+
 ## 🛡️ Security  
+<v-clicks>
+
 - Configure Cloud Armor security policies
 - Use IAM for authentication when needed
 - Implement proper CORS policies
 - Regular security audits
 
+</v-clicks>
+</div>
+
+<div>
+
 ## 📈 Performance
+<v-clicks>
+
 - Optimize container image size
 - Use connection pooling for databases
 - Implement caching strategies
 - Monitor and optimize cold start times
 
+</v-clicks>
+
 ## 💸 Cost Management
+<v-clicks>
+
 - Set appropriate scaling limits
 - Use minimum instances for critical services
 - Monitor egress costs
 - Implement request/response compression
 
 </v-clicks>
+
+</div>
+</div>
 
 ---
 layout: center
